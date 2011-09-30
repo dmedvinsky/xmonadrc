@@ -158,7 +158,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- Key bindings:
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-    , ((modMask,               xK_p     ), spawn "dmenu_run")
+    , ((modMask,               xK_p     ), spawn "dmenu_run -p 'Run:' -nb '#000000' -nf '#d8d8d8' -sb '#d8d8d8' -sf '#000000'")
 
     , ((modMask,               xK_space ), sendMessage NextLayout)
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
@@ -219,7 +219,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((0, 0x1008FF30), spawn "/home/dmedvinsky/bin/toggle_tray.sh")
 
     -- keycode 180 (keysym 0x1008ff18, XF86HomePage)
-    --, ((0, 0x1008ff18), spawn "firefox")
+    , ((0, 0x1008ff18), spawn "uzbl-browser")
     -- keycode 225 (keysym 0x1008ff1b, XF86Search)
     {-, ((0, 0x1008ff1b), spawn "")-}
     -- keycode 163 (keysym 0x1008ff19, XF86Mail)
