@@ -6,13 +6,20 @@ Config {
   , lowerOnStart = True
   , commands = [
         Run StdinReader
-      , Run Cpu ["-t","Cpu: <total>%","-L","3","-H","45","--normal","green","--high","red"] 10
-      , Run MultiCpu ["-t","<total0>/<total1>/<total2>/<total3>", "-L","10","-H","80","--normal","green","--high","red"] 10
-      , Run Memory ["-t","Mem: <usedratio>%"] 10
-      , Run Network "eth0" ["-t","<dev>: <rx>↓<tx>↑","-L","1","-H","32","--normal","green","--high","red"] 10
+      , Run Cpu ["-t", "Cpu: <total>%",
+                 "-L", "3", "-H", "45",
+                 "--normal", "green", "--high", "red"] 10
+      , Run MultiCpu ["-t", "<total0>/<total1>/<total2>/<total3>",
+                      "-L", "10", "-H", "80",
+                      "--normal", "green", "--high", "red"] 10
+      , Run Memory ["-t", "Mem: <usedratio>%"] 10
+      , Run Network "eth0" ["-t", "<dev>: <rx>↓<tx>↑",
+                            "-L", "1", "-H", "32",
+                            "--normal", "green", "--high", "red"] 10
       , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+      , Run Uptime [] 1000
     ]
   , sepChar      = "%"
   , alignSep     = "}{"
-  , template     = "%StdinReader% }{ %cpu%: %multicpu% <fc=white>|</fc> %memory% <fc=white>|</fc> %eth0% <fc=white>|</fc> <fc=orange>%date%</fc>"
+  , template     = "%StdinReader% }{ %cpu%: %multicpu% <fc=white>|</fc> %memory% <fc=white>|</fc> %uptime% <fc=white>|</fc> %eth0% <fc=white>|</fc> <fc=orange>%date%</fc>"
 }
