@@ -27,7 +27,8 @@ import           XMonad.Layout.Grid
 ------------------------------------------------------------------------
 main = do
     barproc <- spawnPipe myBar
-    xmonad $ withUrgencyHook NoUrgencyHook $ myConfig barproc
+    xmonad $ withUrgencyHook NoUrgencyHook
+           $ myConfig barproc
 
 
 ------------------------------------------------------------------------
@@ -87,20 +88,28 @@ myManageHook = composeAll
   , className =? "Gimp"           --> doShift "5"
   , className =? "Gimp"           --> doFloat
   , className =? "Keepassx"       --> doFloat
+  , className =? "feh"            --> doCenterFloat
+
+  , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "diff"
+                                  --> doFullFloat
+  , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "merge"
+                                  --> doFullFloat
   ]
 
 
 ------------------------------------------------------------------------
 -- Status bars and logging:
 myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
-    ppCurrent = xmobarColor "#00FF00" "" . wrap "<" ">"
-  , ppVisible = xmobarColor "#00AA00" "" . wrap "<" ">"
-  , ppHidden  = xmobarColor "#AAAAAA" ""
-  , ppUrgent  = xmobarColor "#FFFFFF" "#FF0000" . wrap "[" "]"
-  , ppLayout  = xmobarColor "#AAAAAA" ""  . shorten 80
-  , ppTitle   = xmobarColor "#CCCCCC" ""
-  , ppSep     = xmobarColor "#FFFFFF" "" " | "
-  , ppOutput  = hPutStrLn xmproc
+    ppCurrent         = xmobarColor "#00FF00" "" . wrap "<" ">"
+  , ppVisible         = xmobarColor "#00AA00" "" . wrap "<" ">"
+  , ppHidden          = xmobarColor "#AAAAAA" ""
+  , ppHiddenNoWindows = const ""
+  , ppUrgent          = xmobarColor "#FFFFFF" "#FF0000" . wrap "[" "]" . xmobarStrip
+  , ppWsSep           = " "
+  , ppSep             = xmobarColor "#FFFFFF" "" " | "
+  , ppLayout          = xmobarColor "#AAAAAA" ""  . shorten 80
+  , ppTitle           = xmobarColor "#CCCCCC" ""
+  , ppOutput          = hPutStrLn xmproc
 }
 
 
