@@ -42,7 +42,7 @@ myBorderWidth        = 1
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#ff0000"
 myWorkspaces         = map show [1..9] ++ ["0", "-", "="]
---myWorkspaces         = withScreens 2 $ map show [1..9] ++ ["0", "-", "="]
+ctrlMask             = controlMask
 
 myConfig bar = defaultConfig {
     terminal           = myTerminal
@@ -168,9 +168,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask,            xK_BackSpace), withFocused (sendMessage . maximizeRestore))
     , ((modMask,               xK_j     ), windows W.focusDown)
     , ((modMask,               xK_k     ), windows W.focusUp)
-    , ((modMask,               xK_m     ), windows W.focusMaster)
+    , ((modMask,               xK_m     ), withFocused (\f -> sendMessage $ MinimizeWin f))
+    , ((modMask .|. shiftMask, xK_m     ), sendMessage RestoreNextMinimizedWin)
     , ((modMask,               xK_u     ), focusUrgent)
     , ((modMask,               xK_Return), windows W.swapMaster)
+    , ((modMask .|. ctrlMask,  xK_Return), windows W.focusMaster)
     , ((modMask .|. shiftMask, xK_j     ), windows W.swapDown)
     , ((modMask .|. shiftMask, xK_k     ), windows W.swapUp)
     , ((modMask,               xK_h     ), sendMessage Shrink)
