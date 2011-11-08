@@ -1,27 +1,27 @@
-import qualified Data.Map as M
 import           Control.Applicative ((<$>))
 import           Data.List           (isInfixOf)
 import           Data.Ratio          ((%))
+import qualified Data.Map as M
 import           System.Exit         (exitWith, ExitCode(..))
 
 import           XMonad
-import           XMonad.Util.Run
 import qualified XMonad.StackSet as W
+import           XMonad.Util.Run
 
-import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.DynamicLog
-import           XMonad.Hooks.UrgencyHook
+import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
+import           XMonad.Hooks.UrgencyHook
 
 import           XMonad.Actions.CycleWS
---import           XMonad.Layout.IndependentScreens
-import           XMonad.Layout.Maximize
-import           XMonad.Layout.NoBorders
-import           XMonad.Layout.Tabbed
-import           XMonad.Layout.TwoPane
 import           XMonad.Layout.Combo
 import           XMonad.Layout.ComboP
 import           XMonad.Layout.Grid
+import           XMonad.Layout.Maximize
+import           XMonad.Layout.Minimize
+import           XMonad.Layout.NoBorders
+import           XMonad.Layout.Tabbed
+import           XMonad.Layout.TwoPane
 
 
 ------------------------------------------------------------------------
