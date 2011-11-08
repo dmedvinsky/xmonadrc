@@ -24,15 +24,13 @@ import           XMonad.Layout.Tabbed
 import           XMonad.Layout.TwoPane
 
 
-------------------------------------------------------------------------
 main = do
     barproc <- spawnPipe myBar
     xmonad $ withUrgencyHook NoUrgencyHook
            $ myConfig barproc
 
 
-------------------------------------------------------------------------
--- Settings:
+-- Settings {{{
 myTerminal           = "urxvtc"
 myBar                = "xmobar ~/.xmonad/mobarrc"
 myModMask            = mod4Mask
@@ -61,10 +59,10 @@ myConfig bar = defaultConfig {
   , normalBorderColor  = myNormalBorderColor
   , focusedBorderColor = myFocusedBorderColor
 }
+-- }}}
 
 
-------------------------------------------------------------------------
--- Window rules:
+-- Window rules {{{
 myManageHook = composeAll
   [
     isFullscreen --> doFullFloat
@@ -96,10 +94,10 @@ myManageHook = composeAll
   , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "merge"
                                   --> doFullFloat
   ]
+-- }}}
 
 
-------------------------------------------------------------------------
--- Status bars and logging:
+-- Status bars and logging {{{
 myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
     ppCurrent         = xmobarColor "#00FF00" "" . wrap "<" ">"
   , ppVisible         = xmobarColor "#00AA00" "" . wrap "<" ">"
@@ -112,10 +110,10 @@ myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
   , ppTitle           = xmobarColor "#CCCCCC" ""
   , ppOutput          = hPutStrLn xmproc
 }
+-- }}}
 
 
-------------------------------------------------------------------------
--- Layouts:
+-- Layouts {{{
 myLayout = avoidStruts $
                smartBorders tiled
            ||| noBorders Full
@@ -142,10 +140,10 @@ myLayout = avoidStruts $
           comboPane1  = myTabbed
           comboPane2  = myTabbed
           comboCondition = ClassName "URxvt"
+-- }}}
 
 
-------------------------------------------------------------------------
--- Mouse bindings and options:
+-- Mouse bindings and options {{{
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
     , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
@@ -153,10 +151,10 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
     --, ((modMask, button4), ())
     --, ((modMask, button5), ())
     ]
+-- }}}
 
 
-------------------------------------------------------------------------
--- Key bindings:
+-- Key bindings {{{
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     , ((modMask,               xK_p     ), spawn "dmenu_run -p 'Run:' -nb '#000000' -nf '#d8d8d8' -sb '#d8d8d8' -sf '#000000'")
@@ -258,10 +256,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+-- }}}
 
 
-------------------------------------------------------------------------
--- Utility functions:
+-- Utility functions {{{
 --data Host = Work | Home
   --deriving (Eq, Read, Show)
 
@@ -274,3 +272,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 termCmdWithName conf a =
     (XMonad.terminal conf) ++ " -name " ++ a ++ " -e " ++ a
+-- }}}
+
+
+-- vim: set foldmethod=marker
