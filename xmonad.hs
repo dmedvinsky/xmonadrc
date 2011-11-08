@@ -79,10 +79,11 @@ myManageHook = composeAll
                                   <+> doFullFloat
 
   , title     =? "mutt"           --> doShift "4"
-  , title     =? "irssi"          --> doShift "4"
-  , title     =? "mcabber"        --> doShift "4"
-  , title     =? "finch"          --> doShift "4"
 
+  , className =? "Skype"          --> doShift "="
+  , title     =? "irssi"          --> doShift "="
+  , title     =? "mcabber"        --> doShift "="
+  , title     =? "finch"          --> doShift "="
   , title     =? "ncmpcpp"        --> doShift "="
 
   , className =? "Gimp"           --> doShift "5"
