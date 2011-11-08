@@ -20,6 +20,7 @@ import           XMonad.Layout.Grid
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.Minimize
 import           XMonad.Layout.NoBorders
+import           XMonad.Layout.PerWorkspace
 import           XMonad.Layout.Tabbed
 import           XMonad.Layout.TwoPane
 
@@ -115,31 +116,35 @@ myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
 
 -- Layouts {{{
 myLayout = avoidStruts $
-               smartBorders tiled
-           ||| noBorders Full
-           ||| Grid
+           onWorkspace "1" (myFull ||| myTiled) $
+           onWorkspace "=" (myTabbed ||| myTiled) $
+           minimize $ smartBorders tiled
+           ||| myFull
            ||| myTabbed
+           ||| myGrid
            ||| termCombo
-    where
-      -- default tiling algorithm partitions the screen into two panes
-      tiled = maximize (Tall nmaster delta ratio)
-      -- The default number of windows in the master pane
-      nmaster = 1
-      -- Default proportion of screen occupied by master pane
-      ratio   = 1/2
-      -- Percent of screen to increment by when resizing panes
-      delta   = 3/100
+  where
+    myTiled = smartBorders tiled
+    myFull = noBorders Full
+    myGrid = smartBorders Grid
 
-      myTabbed = tabbed shrinkText myTabConfig
-      myTabConfig = defaultTheme { inactiveBorderColor = "#BFBFBF"
-                                 , activeTextColor = "#FFFFFF"}
+    tiled = maximize $ Tall nmaster delta ratio
+      where
+        nmaster = 1
+        ratio   = 1/2
+        delta   = 3/100
 
-      termCombo = combineTwoP comboLayout comboPane1 comboPane2 comboCondition
-        where
-          comboLayout = TwoPane 0.03 0.5
-          comboPane1  = myTabbed
-          comboPane2  = myTabbed
-          comboCondition = ClassName "URxvt"
+    myTabbed = tabbed shrinkText myTabConfig
+      where
+        myTabConfig = defaultTheme { inactiveBorderColor = "#BFBFBF"
+                                   , activeTextColor = "#FFFFFF"}
+
+    termCombo = maximize $ combineTwoP comboLayout comboPane1 comboPane2 comboCondition
+      where
+        comboLayout = TwoPane 0.03 0.5
+        comboPane1  = myTabbed
+        comboPane2  = myTabbed
+        comboCondition = ClassName "URxvt"
 -- }}}
 
 
