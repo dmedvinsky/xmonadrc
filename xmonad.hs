@@ -77,10 +77,6 @@ myManageHook = composeAll
 
   , title     =? "mutt"           --> doShift "4"
   , className =? "Skype"          --> doShift "="
-  , title     =? "irssi"          --> doShift "="
-  , title     =? "mcabber"        --> doShift "="
-  , title     =? "finch"          --> doShift "="
-  , title     =? "ncmpcpp"        --> doShift "="
 
   , className =? "Gimp"           --> doShift "5"
   , className =? "Gimp"           --> doFloat
@@ -158,87 +154,86 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 -- Key bindings {{{
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
-    [ ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
-    , ((modMask,               xK_p     ), spawn "dmenu_run -p 'Run:' -nb '#000000' -nf '#d8d8d8' -sb '#d8d8d8' -sf '#000000'")
+    [ ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modMask,               xK_q     ), restart "xmonad" True)
+
+    , ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    , ((modMask,               xK_p     ), spawn $ "dmenu_run")
+    , ((modMask,               xK_b     ), sendMessage ToggleStruts)
 
     , ((modMask,               xK_space ), sendMessage NextLayout)
     , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-    , ((modMask,               xK_n     ), refresh)
 
     , ((modMask .|. shiftMask, xK_c     ), kill)
     , ((modMask,            xK_BackSpace), withFocused (sendMessage . maximizeRestore))
     , ((modMask,               xK_j     ), windows W.focusDown)
     , ((modMask,               xK_k     ), windows W.focusUp)
-    , ((modMask,               xK_m     ), withFocused (\f -> sendMessage $ MinimizeWin f))
-    , ((modMask .|. shiftMask, xK_m     ), sendMessage RestoreNextMinimizedWin)
-    , ((modMask,               xK_u     ), focusUrgent)
-    , ((modMask,               xK_Return), windows W.swapMaster)
-    , ((modMask .|. ctrlMask,  xK_Return), windows W.focusMaster)
+    , ((modMask,               xK_Return), windows W.focusMaster)
+    , ((modMask .|. ctrlMask,  xK_Return), windows W.swapMaster)
     , ((modMask .|. shiftMask, xK_j     ), windows W.swapDown)
     , ((modMask .|. shiftMask, xK_k     ), windows W.swapUp)
     , ((modMask,               xK_h     ), sendMessage Shrink)
     , ((modMask,               xK_l     ), sendMessage Expand)
     , ((modMask,               xK_t     ), withFocused $ windows . W.sink)
+    , ((modMask,               xK_u     ), focusUrgent)
 
     , ((modMask,               xK_comma ), sendMessage (IncMasterN 1))
     , ((modMask,               xK_period), sendMessage (IncMasterN (-1)))
 
-    , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
-    , ((modMask,               xK_q     ), restart "xmonad" True)
-
-    , ((modMask,               xK_b     ), sendMessage ToggleStruts)
-
-
-    -- Jump to previous workspace
     , ((modMask,               xK_Tab   ), toggleWS)
-    -- Swap window between two panes
-    , ((modMask              , xK_s     ), sendMessage $ SwapWindow)
     ]
 
     ++
 
     [
     -- XF86AudioMute
-      ((0, 0x1008ff12), spawn "amixer -q set PCM toggle")
+      ((0, 0x1008ff12), spawn "amixer -q set Master toggle")
     -- XF86AudioLowerVolume
-    , ((0, 0x1008ff11), spawn "amixer -q set PCM 5- unmute")
+    , ((0, 0x1008ff11), spawn "amixer -q set Master 5- unmute")
     -- XF86AudioRaiseVolume
-    , ((0, 0x1008ff13), spawn "amixer -q set PCM 5+ unmute")
+    , ((0, 0x1008ff13), spawn "amixer -q set Master 5+ unmute")
     -- keycode 172 (keysym 0x1008ff14, XF86AudioPlay)
     , ((0, 0x1008ff14), spawn "mpc toggle")
-    , ((modMask, 0x1008ff14), spawn $ termCmdWithName conf "ncmpcpp")
+    , ((ctrlMask, 0x1008ff14), spawn "mpc stop")
+    , ((modMask, 0x1008ff14), spawn $ termCmd "ncmpcpp")
 
     -- keycode 192 (keysym 0x1008ff45, XF86Launch5)
-    --, ((0, 0x1008FF45), windows $ W.greedyView "1")
+    , ((0, 0x1008FF45), spawn "skype")
     -- keycode 193 (keysym 0x1008ff46, XF86Launch6)
-    --, ((0, 0x1008FF46), windows $ W.greedyView "2")
+    , ((0, 0x1008FF46), spawn $ termCmd "twitter")
     -- keycode 194 (keysym 0x1008ff47, XF86Launch7)
-    --, ((0, 0x1008FF47), windows $ W.greedyView "3")
+    -- , ((0, 0x1008FF47), windows $ W.greedyView "3")
     -- keycode 195 (keysym 0x1008ff48, XF86Launch8)
-    --, ((0, 0x1008FF48), windows $ W.greedyView "4")
+    -- , ((0, 0x1008FF48), windows $ W.greedyView "4")
     -- keycode 196 (keysym 0x1008ff49, XF86Launch9)
-    --, ((0, 0x1008FF49), windows $ W.greedyView "5")
+    -- , ((0, 0x1008FF49), windows $ W.greedyView "5")
+    , ((0, 0x1008FF49), spawn $ myBin "toggle_tray.sh")
+
     -- keycode 164 (keysym 0x1008ff30, XF86Favorites)
-    , ((0, 0x1008FF30), spawn "/home/dmedvinsky/bin/toggle_tray.sh")
-
+    , ((0, 0x1008FF30), spawn "gvim")
     -- keycode 180 (keysym 0x1008ff18, XF86HomePage)
-    , ((0, 0x1008ff18), spawn "uzbl-browser")
+    , ((0, 0x1008ff18), spawn "firefox")
     -- keycode 225 (keysym 0x1008ff1b, XF86Search)
-    {-, ((0, 0x1008ff1b), spawn "")-}
+    -- , ((0, 0x1008ff1b), spawn "")
     -- keycode 163 (keysym 0x1008ff19, XF86Mail)
-    {-, ((0, 0x1008ff19), spawn "")-}
+    , ((0, 0x1008ff19), spawn $ termCmd "mutt")
     -- keycode 148 (keysym 0x1008ff1d, XF86Calculator)
-    , ((0,                       0x1008ff1d), spawn $ termCmdWithName conf "mcabber")
-    , ((modMask,                 0x1008ff1d), spawn $ termCmdWithName conf "finch")
-    , ((modMask .|. controlMask, 0x1008ff1d), spawn $ termCmdWithName conf "irssi")
+    -- , ((0, 0x1008ff1d), spawn "")
 
-    , ((modMask,               xK_F1    ), spawn "gvim")
-    , ((modMask,               xK_F2    ), spawn "firefox")
-    {-, ((modMask,               xK_F3    ), spawn )-}
-    , ((modMask,               xK_F4    ), spawn $ termCmdWithName conf "mutt")
-    {-, ((modMask,               xK_F5    ), spawn )-}
-    , ((modMask,               xK_F12   ), spawn "/home/dmedvinsky/bin/lock")
-    , ((modMask .|. controlMask, xK_F12 ), spawn "/home/dmedvinsky/bin/lock 1")
+    , ((modMask,               xK_F12     ), spawn $ myBin "lock")
+    , ((modMask .|. ctrlMask,  xK_F12     ), spawn $ myBin "lock" ++ " 1")
+
+    -- control mouse from keyboard
+    , ((modMask             ,  xK_Left    ), spawn $ "xdotool mousemove_relative -- -30 0")
+    , ((modMask             ,  xK_Right   ), spawn $ "xdotool mousemove_relative -- 30 0")
+    , ((modMask             ,  xK_Up      ), spawn $ "xdotool mousemove_relative -- 0 -30")
+    , ((modMask             ,  xK_Down    ), spawn $ "xdotool mousemove_relative -- 0 30")
+    , ((modMask .|. ctrlMask,  xK_Left    ), spawn $ "xdotool mousemove_relative -- -3 0")
+    , ((modMask .|. ctrlMask,  xK_Right   ), spawn $ "xdotool mousemove_relative -- 3 0")
+    , ((modMask .|. ctrlMask,  xK_Up      ), spawn $ "xdotool mousemove_relative -- 0 -3")
+    , ((modMask .|. ctrlMask,  xK_Down    ), spawn $ "xdotool mousemove_relative -- 0 3")
+    , ((modMask             ,  xK_KP_Enter), spawn $ "xdotool click -- 1")
+    , ((modMask .|. ctrlMask,  xK_KP_Enter), spawn $ "xdotool click -- 3")
     ]
 
     --
@@ -248,7 +243,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ++
     [((m .|. modMask, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0, xK_minus, xK_equal])
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -256,24 +251,30 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     --
     ++
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        | (key, sc) <- zip [xK_e, xK_w] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 -- }}}
 
 
 -- Utility functions {{{
---data Host = Work | Home
-  --deriving (Eq, Read, Show)
+-- data Host = Work | Home | Other
+--   deriving (Eq, Read, Show)
 
---getHost :: IO Host
---getHost = do
-  --hostName <- nodeName `fmap` getSystemID
-  --return $ case hostName of
-    --"zeus" -> Work
-    --_      -> Home
+-- getHost :: IO Host
+-- getHost = do
+--   hostName <- nodeName `fmap` getSystemID
+--   return $ case hostName of
+--     "zeus" -> Work
+--     "home" -> Home
+--     _      -> Other
 
-termCmdWithName conf a =
-    (XMonad.terminal conf) ++ " -name " ++ a ++ " -e " ++ a
+termCmdWithName cmd name =
+    myTerminal ++ " -name " ++ name ++ " -e " ++ cmd
+
+termCmd cmd = termCmdWithName cmd cmd
+
+myBinDir = "/home/dmedvinsky/bin/"
+myBin = (++) myBinDir
 -- }}}
 
 
