@@ -35,7 +35,6 @@ main = do
 myTerminal           = "urxvtc"
 myBar                = "xmobar ~/.xmonad/mobarrc"
 myModMask            = mod4Mask
-myNumlockMask        = mod2Mask
 myFocusFollowsMouse  = True
 myBorderWidth        = 1
 myNormalBorderColor  = "#dddddd"
@@ -46,7 +45,6 @@ ctrlMask             = controlMask
 myConfig bar = defaultConfig {
     terminal           = myTerminal
   , modMask            = myModMask
-  , numlockMask        = myNumlockMask
   , workspaces         = myWorkspaces
   , manageHook         = myManageHook
   , layoutHook         = myLayout
@@ -78,7 +76,6 @@ myManageHook = composeAll
                                   <+> doFullFloat
 
   , title     =? "mutt"           --> doShift "4"
-
   , className =? "Skype"          --> doShift "="
   , title     =? "irssi"          --> doShift "="
   , title     =? "mcabber"        --> doShift "="
@@ -117,8 +114,8 @@ myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
 -- Layouts {{{
 myLayout = avoidStruts $
            onWorkspace "1" (myFull ||| myTiled) $
-           onWorkspace "=" (myTabbed ||| myTiled) $
-           minimize $ smartBorders tiled
+           onWorkspace "=" (myTabbed ||| myTiled ||| myGrid) $
+           minimize $ myTiled
            ||| myFull
            ||| myTabbed
            ||| myGrid
