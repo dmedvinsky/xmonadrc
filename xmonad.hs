@@ -187,11 +187,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ++
 
     [
-    -- XF86AudioMute
+    -- (keysym 0x1008ff12, XF86AudioMute)
       ((0, 0x1008ff12), spawn "amixer -q set Master toggle")
-    -- XF86AudioLowerVolume
+    -- (keysym 0x1008ff11, XF86AudioLowerVolume)
     , ((0, 0x1008ff11), spawn "amixer -q set Master 5- unmute")
-    -- XF86AudioRaiseVolume
+    -- (keysym 0x1008ff13, XF86AudioRaiseVolume)
     , ((0, 0x1008ff13), spawn "amixer -q set Master 5+ unmute")
     -- keycode 172 (keysym 0x1008ff14, XF86AudioPlay)
     , ((0, 0x1008ff14), spawn "mpc toggle")
@@ -203,7 +203,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- keycode 193 (keysym 0x1008ff46, XF86Launch6)
     , ((0, 0x1008FF46), spawn $ termCmd "twitter")
     -- keycode 194 (keysym 0x1008ff47, XF86Launch7)
-    -- , ((0, 0x1008FF47), windows $ W.greedyView "3")
+    , ((0, 0x1008FF47), spawn "keepassx")
     -- keycode 195 (keysym 0x1008ff48, XF86Launch8)
     -- , ((0, 0x1008FF48), windows $ W.greedyView "4")
     -- keycode 196 (keysym 0x1008ff49, XF86Launch9)
@@ -214,6 +214,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((0, 0x1008FF30), spawn "gvim")
     -- keycode 180 (keysym 0x1008ff18, XF86HomePage)
     , ((0, 0x1008ff18), spawn "firefox")
+    , ((modMask, 0x1008ff18), spawn "luakit")
     -- keycode 225 (keysym 0x1008ff1b, XF86Search)
     -- , ((0, 0x1008ff1b), spawn "")
     -- keycode 163 (keysym 0x1008ff19, XF86Mail)
