@@ -3,6 +3,7 @@ import           Data.List           (isInfixOf)
 import           Data.Ratio          ((%))
 import qualified Data.Map as M
 import           System.Exit         (exitWith, ExitCode(..))
+import           System.Posix.Unistd (nodeName, getSystemID)
 
 import           XMonad
 import qualified XMonad.StackSet as W
@@ -257,16 +258,16 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 
 -- Utility functions {{{
--- data Host = Work | Home | Other
---   deriving (Eq, Read, Show)
+data Host = Work | Home | Other
+  deriving (Eq, Read, Show)
 
--- getHost :: IO Host
--- getHost = do
---   hostName <- nodeName `fmap` getSystemID
---   return $ case hostName of
---     "zeus" -> Work
---     "home" -> Home
---     _      -> Other
+getHost :: IO Host
+getHost = do
+  hostName <- nodeName `fmap` getSystemID
+  return $ case hostName of
+    "zeus" -> Work
+    "home" -> Home
+    _      -> Other
 
 termCmdWithName cmd name =
     myTerminal ++ " -name " ++ name ++ " -e " ++ cmd
