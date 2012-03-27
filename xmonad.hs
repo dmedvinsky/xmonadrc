@@ -88,6 +88,8 @@ myManageHook = composeAll
                                   --> doFullFloat
   , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "merge"
                                   --> doFullFloat
+
+  , className =? "MPlayer"        --> doCenterFloat
   ]
 -- }}}
 
