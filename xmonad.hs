@@ -68,6 +68,7 @@ myManageHook = composeAll
     isFullscreen --> doFullFloat
 
   , className =? "stalonetray"    --> doIgnore
+  , className =? "Workrave"       --> doIgnore
 
   , className =? "Nightly"        --> doShift "2"
   , className =? "Nightly" <&&> isInfixOf "Downloads" <$> title
