@@ -282,4 +282,4 @@ myBin = (++) myBinDir
 -- }}}
 
 
--- vim: set foldmethod=marker
+-- vim: fdm=marker
