@@ -70,10 +70,10 @@ myManageHook = composeAll
   , className =? "stalonetray"    --> doIgnore
   , className =? "Workrave"       --> doIgnore
 
-  , className =? "Nightly"        --> doShift "2"
-  , className =? "Nightly" <&&> isInfixOf "Downloads" <$> title
+  , className =? "Firefox"        --> doShift "2"
+  , className =? "Firefox" <&&> isInfixOf "Downloads" <$> title
                                   --> doCenterFloat
-  , className =? "Nightly" <&&> isInfixOf "Firebug" <$> title
+  , className =? "Firefox" <&&> isInfixOf "Firebug" <$> title
                                   --> doShift "-"
                                   <+> doFullFloat
 
