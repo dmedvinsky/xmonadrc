@@ -15,8 +15,10 @@ import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.UrgencyHook
 
 import           XMonad.Actions.CycleWS
+import           XMonad.Layout.Circle
 import           XMonad.Layout.Combo
 import           XMonad.Layout.ComboP
+import           XMonad.Layout.DragPane
 import           XMonad.Layout.Grid
 import           XMonad.Layout.Maximize
 import           XMonad.Layout.Minimize
@@ -63,6 +65,12 @@ myConfig bar = defaultConfig {
 
 
 -- Window rules {{{
+keepMaster :: (a -> Bool) -> Query a -> ManageHook
+keepMaster f g = assertSlave <+> assertMaster
+  where
+    assertSlave = fmap (not . f) g --> doF W.swapDown
+    assertMaster = fmap f g --> doF W.swapMaster
+
 myManageHook = composeAll
   [
     isFullscreen --> doFullFloat
@@ -84,13 +92,14 @@ myManageHook = composeAll
   , className =? "Gimp"           --> doFloat
   , className =? "Keepassx"       --> doFloat
   , className =? "feh"            --> doCenterFloat
+  , className =? "MPlayer"        --> doCenterFloat
 
   , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "diff"
                                   --> doFullFloat
   , className =? "Vim" <&&> stringProperty "WM_WINDOW_ROLE" =? "merge"
                                   --> doFullFloat
 
-  , className =? "MPlayer"        --> doCenterFloat
+  , currentWs =? "="              --> keepMaster ("dmitry.medvinsky" `isInfixOf`) title
   ]
 -- }}}
 
@@ -114,7 +123,8 @@ myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
 -- Layouts {{{
 myLayout = avoidStruts $
            onWorkspace "1" (myFull ||| myTiled) $
-           onWorkspace "=" (myTabbed ||| myTiled ||| myGrid) $
+           onWorkspace "-" (myDragPaneV ||| myGrid) $
+           onWorkspace "=" (Circle ||| myTabbed ||| myGrid) $
            minimize $ myTiled
            ||| myFull
            ||| myTabbed
@@ -124,6 +134,7 @@ myLayout = avoidStruts $
     myTiled = smartBorders tiled
     myFull = noBorders Full
     myGrid = smartBorders Grid
+    myDragPaneV = dragPane Vertical 0 0.5
 
     tiled = maximize $ Tall nmaster delta ratio
       where
