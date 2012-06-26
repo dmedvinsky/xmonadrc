@@ -129,8 +129,8 @@ myXmobarLogHook xmproc = dynamicLogWithPP $ xmobarPP {
 -- Layouts {{{
 myLayout = avoidStruts $
            onWorkspace "1" (myFull ||| myTiled) $
-           onWorkspace "-" (myDragPaneV ||| myGrid) $
-           onWorkspace "=" (Circle ||| myTabbed ||| myGrid) $
+           onWorkspace "-" (myGrid ||| myDragPaneV) $
+           onWorkspace "=" (myTabbed ||| Circle ||| myGrid) $
            minimize $ myTiled
            ||| myFull
            ||| myTabbed
@@ -207,40 +207,41 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ++
 
     [
-    -- (keysym 0x1008ff12, XF86AudioMute)
-      ((0, 0x1008ff12), spawn "amixer -q set Master toggle")
-    -- (keysym 0x1008ff11, XF86AudioLowerVolume)
-    , ((0, 0x1008ff11), spawn "amixer -q set Master 5- unmute")
-    -- (keysym 0x1008ff13, XF86AudioRaiseVolume)
-    , ((0, 0x1008ff13), spawn "amixer -q set Master 5+ unmute")
-    -- keycode 172 (keysym 0x1008ff14, XF86AudioPlay)
-    , ((0, 0x1008ff14), spawn "mpc toggle")
-    , ((ctrlMask, 0x1008ff14), spawn "mpc stop")
-    , ((modMask, 0x1008ff14), spawn $ termCmd "ncmpcpp")
-
-    -- keycode 192 (keysym 0x1008ff45, XF86Launch5)
-    , ((0, 0x1008FF45), spawn "skype")
-    -- keycode 193 (keysym 0x1008ff46, XF86Launch6)
-    , ((0, 0x1008FF46), spawn $ termCmd "twitter")
-    -- keycode 194 (keysym 0x1008ff47, XF86Launch7)
-    , ((0, 0x1008FF47), spawn "keepassx")
-    -- keycode 195 (keysym 0x1008ff48, XF86Launch8)
-    -- , ((0, 0x1008FF48), windows $ W.greedyView "4")
-    -- keycode 196 (keysym 0x1008ff49, XF86Launch9)
-    -- , ((0, 0x1008FF49), windows $ W.greedyView "5")
-    , ((0, 0x1008FF49), spawn $ myBin "toggle_tray.sh")
-
-    -- keycode 164 (keysym 0x1008ff30, XF86Favorites)
-    , ((0, 0x1008FF30), spawn "gvim")
     -- keycode 180 (keysym 0x1008ff18, XF86HomePage)
-    , ((0, 0x1008ff18), spawn "firefox")
+      ((0, 0x1008ff18), spawn "firefox")
     , ((modMask, 0x1008ff18), spawn "luakit")
     -- keycode 225 (keysym 0x1008ff1b, XF86Search)
     -- , ((0, 0x1008ff1b), spawn "")
     -- keycode 163 (keysym 0x1008ff19, XF86Mail)
     , ((0, 0x1008ff19), spawn $ termCmd "mutt")
+
+    -- keycode 192 (keysym 0x1008ff45, XF86Launch5)
+    , ((0, 0x1008FF45), spawn "skype")
+    -- keycode 193 (keysym 0x1008ff46, XF86Launch6)
+    , ((0, 0x1008FF46), spawn $ termCmdWithName (myBin "mcabber") "jabber")
+    -- keycode 194 (keysym 0x1008ff47, XF86Launch7)
+    , ((0, 0x1008FF47), spawn "keepassx")
+    -- keycode 195 (keysym 0x1008ff48, XF86Launch8)
+    -- , ((0, 0x1008FF48), spawn "")
+    -- keycode 196 (keysym 0x1008ff49, XF86Launch9)
+    -- , ((0, 0x1008FF49), spawn "")
+
+    -- (keysym 0x1008ff12, XF86AudioMute)
+    , ((0, 0x1008ff12), spawn "amixer -q set Master toggle")
+    -- (keysym 0x1008ff11, XF86AudioLowerVolume)
+    , ((0, 0x1008ff11), spawn "amixer -q set Master 5- unmute")
+    -- (keysym 0x1008ff13, XF86AudioRaiseVolume)
+    , ((0, 0x1008ff13), spawn "amixer -q set Master 5+ unmute")
+    -- keycode 172 (keysym 0x1008ff14, XF86AudioPlay)
+    , ((0, 0x1008ff14), spawn $ myBin "mocp --toggle-pause")
+    , ((ctrlMask, 0x1008ff14), spawn "mpc stop")
+    , ((modMask, 0x1008ff14), spawn $ termCmd $ myBin "mocp")
+
     -- keycode 148 (keysym 0x1008ff1d, XF86Calculator)
     -- , ((0, 0x1008ff1d), spawn "")
+
+    -- keycode 164 (keysym 0x1008ff30, XF86Favorites)
+    , ((0, 0x1008FF30), spawn $ myBin "toggle_tray.sh")
 
     , ((modMask,               xK_F12     ), spawn $ myBin "lock")
     , ((modMask .|. ctrlMask,  xK_F12     ), spawn $ myBin "lock" ++ " 1")
@@ -265,7 +266,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ++
     [((m .|. modMask, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0, xK_minus, xK_equal])
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
     --
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
