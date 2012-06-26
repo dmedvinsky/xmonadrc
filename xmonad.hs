@@ -52,6 +52,7 @@ myConfig bar = defaultConfig {
   , manageHook         = myManageHook
   , layoutHook         = myLayout
   , logHook            = myXmobarLogHook bar
+  , startupHook        = myStartupHook
 
   , keys               = myKeys
   , mouseBindings      = myMouseBindings
@@ -63,6 +64,11 @@ myConfig bar = defaultConfig {
 }
 -- }}}
 
+-- Startup Hook {{{
+myStartupHook :: X ()
+myStartupHook = do
+    spawn "xautolock"
+-- }}}
 
 -- Window rules {{{
 keepMaster :: (a -> Bool) -> Query a -> ManageHook
