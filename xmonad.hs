@@ -95,7 +95,6 @@ myManageHook = composeAll
   , className =? "Skype"          --> doShift "="
 
   , className =? "Gimp"           --> doShift "5"
-  , className =? "Gimp"           --> doFloat
   , className =? "Keepassx"       --> doFloat
   , className =? "feh"            --> doCenterFloat
   , className =? "MPlayer"        --> doCenterFloat
