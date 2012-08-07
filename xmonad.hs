@@ -1,4 +1,5 @@
 import           Control.Applicative ((<$>))
+import           Control.Monad       (liftM)
 import           Data.List           (isInfixOf)
 import           Data.Ratio          ((%))
 import qualified Data.Map as M
@@ -91,10 +92,13 @@ myManageHook = composeAll
                                   --> doShift "-"
                                   <+> doFullFloat
 
-  , title     =? "mutt"           --> doShift "4"
+  , title     =? "mail"           --> doShift "4"
+  , title     =? "gmail"          --> doShift "4"
   , className =? "Skype"          --> doShift "="
 
   , className =? "Gimp"           --> doShift "5"
+  , className =? "Gimp" <&&> ((liftM not) (stringProperty "WM_WINDOW_ROLE" =? "gimp-image-window"))
+                                  --> doCenterFloat
   , className =? "Keepassx"       --> doFloat
   , className =? "feh"            --> doCenterFloat
   , className =? "MPlayer"        --> doCenterFloat
@@ -212,7 +216,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- keycode 225 (keysym 0x1008ff1b, XF86Search)
     -- , ((0, 0x1008ff1b), spawn "")
     -- keycode 163 (keysym 0x1008ff19, XF86Mail)
-    , ((0, 0x1008ff19), spawn $ termCmd "mutt")
+    , ((0, 0x1008ff19), spawn $ termCmd "mail")
+    , ((modMask, 0x1008ff19), spawn $ termCmd "gmail")
 
     -- keycode 192 (keysym 0x1008ff45, XF86Launch5)
     , ((0, 0x1008FF45), spawn "skype")
@@ -228,13 +233,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- (keysym 0x1008ff12, XF86AudioMute)
     , ((0, 0x1008ff12), spawn "amixer -q set Master toggle")
     -- (keysym 0x1008ff11, XF86AudioLowerVolume)
-    , ((0, 0x1008ff11), spawn "amixer -q set Master 5- unmute")
+    , ((0, 0x1008ff11), spawn "amixer -q set Master 1- unmute")
     -- (keysym 0x1008ff13, XF86AudioRaiseVolume)
-    , ((0, 0x1008ff13), spawn "amixer -q set Master 5+ unmute")
+    , ((0, 0x1008ff13), spawn "amixer -q set Master 1+ unmute")
     -- keycode 172 (keysym 0x1008ff14, XF86AudioPlay)
-    , ((0, 0x1008ff14), spawn $ myBin "mocp --toggle-pause")
-    , ((ctrlMask, 0x1008ff14), spawn "mpc stop")
-    , ((modMask, 0x1008ff14), spawn $ termCmd $ myBin "mocp")
+    , ((0, 0x1008ff14), spawn "cmus-remote --pause")
+    , ((ctrlMask, 0x1008ff14), spawn "cmus-remote --stop")
+    , ((modMask, 0x1008ff14), spawn $ termCmd $ "cmus")
 
     -- keycode 148 (keysym 0x1008ff1d, XF86Calculator)
     -- , ((0, 0x1008ff1d), spawn "")
